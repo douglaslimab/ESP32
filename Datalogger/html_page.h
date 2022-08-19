@@ -17,6 +17,8 @@ R"=====(
 <body>
     <div class="main">
       <div class="main-data">
+        <p>Time: </p>
+        <p id="time"></p>
         <p>Channel 1: </p>
         <p id="analog1"></p>
         <p>Channel 2: </p>
@@ -64,12 +66,23 @@ R"=====(
         }
         websock.send(run_btn);
      }
-     function sendBtn(){
+     function sendBtn() {
+       var output = jsonToCSV(JSONobj.time);
+      document.getElementById('time').innerHTML = output[0];
+       var output = jsonToCSV(JSONobj.channel1);
+      document.getElementById('analog1').innerHTML = output[0];
+       var output = jsonToCSV(JSONobj.channel2);
+      document.getElementById('analog2').innerHTML = output[0];
        send_btn = 'send_btn=ON';
         if(JSONobj.send_btn == 'ON') {
           send_btn = 'send_btn=OFF';
         }
         websock.send(send_btn);
+     }
+     function jsonToCSV(objArray) {
+       var array = objArray.split(",");
+
+       return array;
      }
   </script>
 </body>

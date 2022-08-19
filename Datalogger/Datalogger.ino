@@ -24,8 +24,11 @@ int serialPack[4];
 
 int array_length = 255;
 String time_list[255];
+String time_String = "";
 int ch1_list[255];
+String ch1_String = "";
 int ch2_list[255];
+String ch2_String = "";
 int pointer = 0;
 
 unsigned long currentMillis;
@@ -75,7 +78,7 @@ void loop()
   String sendstatus = "OFF";
   if(send_btn == true) sendstatus = "ON";
 
-  JSONtxt = "{\"LEDonoff\":\""+LEDstatus+"\",\"run_btn\":\""+runstatus+"\",\"send_btn\":\""+sendstatus+"\"}";
+  JSONtxt = "{\"LEDonoff\":\""+LEDstatus+"\",\"run_btn\":\""+runstatus+"\",\"send_btn\":\""+sendstatus+"\",\"time\":\""+time_String+"\",\"channel1\":\""+ch1_String+"\",\"channel2\":\""+ch2_String+"\"}";
   webSocket.broadcastTXT(JSONtxt);
 
   
@@ -98,6 +101,11 @@ void loop()
     // run data log
     if(serialPack[0] == 'r'||run_btn){
       led_interval = 500;
+
+      time_String = "";
+      ch1_String = "";
+      ch2_String = "";
+      
       time_list[pointer] = rtc.getTime();
       ch1_list[pointer] = analogRead(34);
       delay(2);
@@ -138,6 +146,16 @@ void loop()
         Serial.print(", ");
         Serial.println(ch2_list[i]);
       }
+
+      for(int n = 0; n <= pointer; n++) {
+        time_String = time_String + time_list[n] + ",";
+        ch1_String = ch1_String + ch1_list[n] + ",";
+        ch2_String = ch2_String + ch2_list[n] + ",";
+      }
+      Serial.println(time_String);
+      Serial.println(ch1_String);
+      Serial.println(ch2_String);
+//      ch1_String = "";
       pointer = 0;
     }
   }
