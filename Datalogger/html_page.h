@@ -27,11 +27,14 @@ R"=====(
       <div class="main-btn">
         <button id="run-btn" type="button" ONCLICK="runBtn()">Run/Stop</button>
         <button id="send-btn" type="button" ONCLICK="sendBtn()">Export</button>
+        <button type="button" onclick="download()">CSV</button>
+        <button id="btn"></button>
       </div>
     </div>
 <!-----------------------------JavaScript--------------------------->
   <script>
      InitWebSocket()
+    
      function InitWebSocket()
      {
        websock = new WebSocket('ws://'+window.location.hostname+':81/'); 
@@ -68,11 +71,12 @@ R"=====(
      }
      function sendBtn() {
        var output = jsonToCSV(JSONobj.time);
-      document.getElementById('time').innerHTML = output[0];
+       document.getElementById('time').innerHTML = output[0];
        var output = jsonToCSV(JSONobj.channel1);
-      document.getElementById('analog1').innerHTML = output[0];
+       document.getElementById('analog1').innerHTML = output[0];
        var output = jsonToCSV(JSONobj.channel2);
-      document.getElementById('analog2').innerHTML = output[0];
+       document.getElementById('analog2').innerHTML = output[0];
+       
        send_btn = 'send_btn=ON';
         if(JSONobj.send_btn == 'ON') {
           send_btn = 'send_btn=OFF';
@@ -83,6 +87,26 @@ R"=====(
        var array = objArray.split(",");
 
        return array;
+     }
+     function download() {
+       var csv = 'Time,Channel1,Channel2\n';
+       var time_String = jsonToCSV(JSONobj.time);
+       var channel1_String = jsonToCSV(JSONobj.channel1);
+       var channel2_String = jsonToCSV(JSONobj.channel2);
+
+       for(var i=0; i<= 10;i++) {
+         csv += time_String[i]+','+ channel1_String[i]+','+channel2_String[i]
+         csv += "\n"
+       }
+
+       console.log(csv);
+
+       var hiddenElement = document.createElement('a');  
+       hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);  
+       hiddenElement.target = '_blank';  
+       
+       hiddenElement.download = 'Famous Personalities.csv';  
+       hiddenElement.click();  
      }
   </script>
 </body>

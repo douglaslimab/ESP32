@@ -42,7 +42,7 @@ float loopTime = 10;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   rtc.setTime(30, 16, 9, 18, 8, 2022);
 
