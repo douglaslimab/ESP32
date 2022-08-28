@@ -30,6 +30,7 @@ String ch1_String = "";
 int ch2_list[255];
 String ch2_String = "";
 int pointer = 0;
+int pack_length;
 
 unsigned long currentMillis;
 long previousMillis = 0;
@@ -45,6 +46,7 @@ void setup()
   Serial.begin(115200);
 
   rtc.setTime(30, 16, 9, 18, 8, 2022);
+  
 
   pinMode(LED, OUTPUT);
   
@@ -78,7 +80,7 @@ void loop()
   String sendstatus = "OFF";
   if(send_btn == true) sendstatus = "ON";
 
-  JSONtxt = "{\"LEDonoff\":\""+LEDstatus+"\",\"run_btn\":\""+runstatus+"\",\"send_btn\":\""+sendstatus+"\",\"time\":\""+time_String+"\",\"channel1\":\""+ch1_String+"\",\"channel2\":\""+ch2_String+"\"}";
+  JSONtxt = "{\"LEDonoff\":\""+LEDstatus+"\",\"run_btn\":\""+runstatus+"\",\"send_btn\":\""+sendstatus+"\",\"time\":\""+time_String+"\",\"channel1\":\""+ch1_String+"\",\"channel2\":\""+ch2_String+"\",\"pack_length\":\""+pack_length+"\"}";
   webSocket.broadcastTXT(JSONtxt);
 
   
@@ -95,11 +97,33 @@ void loop()
   }
 
   //---------------------------------------------------------------------------
-  if (currentMillis - previousMillis2 >= 1000) {
+  if (currentMillis - previousMillis2 >= 100) {
     previousMillis2 = currentMillis;
 
+    if(run_btn){
+      Serial.println("Running..");
+      led_interval = 500;
+      
+      time_list[pointer] = rtc.getTime();
+      time_String = time_String + time_list[pointer] + ",";
+      ch1_list[pointer] = analogRead(34);
+      ch1_String = ch1_String + ch1_list[pointer] + ",";
+      delay(2);
+      ch2_list[pointer] = analogRead(36);
+      ch2_String = ch2_String + ch2_list[pointer] + ",";
+
+      pack_length = pointer;
+      pointer++;
+      if(pointer == array_length) pointer = 0;
+    } else {
+      Serial.println("Waiting..");
+      Serial.println(time_String);
+      led_interval = 10;
+      pointer = 0;
+    }
+
     // run data log
-    if(serialPack[0] == 'r'||run_btn){
+    if(serialPack[0] == 'r'){
       led_interval = 500;
 
       time_String = "";
@@ -137,7 +161,7 @@ void loop()
     previousMillis3 = currentMillis;
 
     // print data
-    if(serialPack[0] == 'p'||send_btn){
+    if(serialPack[0] == 'p'){
       led_interval = 10;
       for(int i = 0; i <= pointer ; i++){
         Serial.print(time_list[i]);
