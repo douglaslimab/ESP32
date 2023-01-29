@@ -97,7 +97,7 @@ void loop()
   }
 
   //---------------------------------------------------------------------------
-  if (currentMillis - previousMillis2 >= 100) {
+  if (currentMillis - previousMillis2 >= 1000) {
     previousMillis2 = currentMillis;
 
     if(run_btn){
@@ -112,6 +112,7 @@ void loop()
       ch2_list[pointer] = analogRead(36);
       ch2_String = ch2_String + ch2_list[pointer] + ",";
 
+      Serial.println(JSONtxt.length());
       pack_length = pointer;
       pointer++;
       if(pointer == array_length) pointer = 0;
