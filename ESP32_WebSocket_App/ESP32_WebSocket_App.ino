@@ -20,7 +20,15 @@ R"=====(
           document.getElementById('btn').innerHTML = jsonOBJ.LEDonoff;
         }
       }
-     function button() {
+    
+      setInterval(function(){
+        statusUpdate();
+      });
+
+      function statusUpdate(){
+        
+      }
+      function button() {
         btn = 'LEDonoff=ON';
         if(document.getElementById('btn').innerHTML == 'ON') {
           btn = 'LEDonoff=OFF';
