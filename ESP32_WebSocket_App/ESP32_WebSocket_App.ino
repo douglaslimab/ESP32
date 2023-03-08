@@ -3,8 +3,8 @@
 #include <WebSocketsServer.h>
 #include "webpageCode.h"
 
-const char* ssid = "VM47E4856";         //"Douglas";
-const char* password = "7z4ycmhbRaMh";  //"hzzs03322";
+const char* ssid = "Douglas"; //"VM47E4856";         
+const char* password = "hzzs03322"; //"7z4ycmhbRaMh";
 
 #define LED 2
 
